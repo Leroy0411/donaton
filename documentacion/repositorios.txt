@@ -1,0 +1,88 @@
+===========================================================
+  DONATON — PARCIAL 2 | DSY1106 Desarrollo Fullstack III
+  Repositorios GitHub
+===========================================================
+
+REPOSITORIO PRINCIPAL
+─────────────────────
+URL: https://github.com/oscar-flores-leroy/donaton-parcial2
+Descripción: Repositorio raíz del proyecto. Contiene el README
+             general y referencias a todos los componentes.
+
+──────────────────────────────────────────────────────────
+
+MICROSERVICIO MS-DONACIONES
+────────────────────────────
+URL: https://github.com/oscar-flores-leroy/ms-donaciones
+Puerto: 8081
+Patrones: Repository Pattern + Factory Method (GoF)
+Descripción: Gestión del ciclo de vida completo de donaciones
+             (ROPA, ALIMENTO, MEDICO, HIGIENE). Incluye pruebas
+             unitarias con Mockito y reporte JaCoCo.
+Ramas:
+  - main
+  - develop
+  - feature/ms-donaciones-repository
+  - feature/ms-donaciones-factory
+  - feature/ms-donaciones-tests
+
+──────────────────────────────────────────────────────────
+
+MICROSERVICIO MS-LOGÍSTICA
+──────────────────────────
+URL: https://github.com/oscar-flores-leroy/ms-logistica
+Puerto: 8082
+Patrones: Repository Pattern + Observer (GoF)
+Descripción: Gestión de centros de acopio y envíos. Implementa
+             el patrón Observer para notificar cambios de estado
+             a auditoria y sistema de notificaciones.
+Ramas:
+  - main
+  - develop
+  - feature/ms-logistica-repository
+  - feature/ms-logistica-observer
+  - feature/ms-logistica-tests
+
+──────────────────────────────────────────────────────────
+
+BACKEND FOR FRONTEND (BFF)
+──────────────────────────
+URL: https://github.com/oscar-flores-leroy/bff-donaton
+Puerto: 8080
+Patrón: Backend For Frontend (BFF)
+Descripción: Agrega datos de MS-Donaciones y MS-Logística en
+             un único response optimizado para el dashboard React.
+             Incluye manejo de fallos parciales con alertas.
+Ramas:
+  - main
+  - develop
+  - feature/bff-service
+  - feature/bff-tests
+
+──────────────────────────────────────────────────────────
+
+FRONTEND REACT
+──────────────
+URL: https://github.com/oscar-flores-leroy/frontend-donaton
+Puerto: 3000
+Patrones: Facade (donatonApi.js) + Custom Hook (useDonaciones)
+Descripción: SPA React con Dashboard que consume el BFF y
+             formulario de registro de donaciones.
+Ramas:
+  - main
+  - develop
+  - feature/frontend-donaton
+
+──────────────────────────────────────────────────────────
+
+ARQUETIPOS MAVEN
+────────────────
+URL: https://github.com/oscar-flores-leroy/donaton-arquetipos
+Descripción: Arquetipo Maven para generar nuevos microservicios
+             Donaton con estructura base estandarizada (Repository
+             Pattern + Controller + pruebas unitarias).
+Ramas:
+  - main
+  - feature/arquetipos-maven
+
+===========================================================
