@@ -35,7 +35,7 @@ public class DonacionService {
     }
 
     public List<Donacion> obtenerPorEstado(String estado) {
-        return donacionRepository.findByEstado(estado);
+        return donacionRepository.findByEstado(estado.toUpperCase());
     }
 
     public List<Donacion> obtenerPorCentro(Long centroAcopioId) {
@@ -66,6 +66,10 @@ public class DonacionService {
     }
 
     public boolean eliminar(Long id) {
-        return donacionRepository.deleteById(id);
+        if (!donacionRepository.existsById(id)) {
+            return false;
+        }
+        donacionRepository.deleteById(id);
+        return true;
     }
 }

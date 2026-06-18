@@ -160,4 +160,48 @@ class LogisticaServiceTest {
         assertTrue(resultado.isPresent());
         assertEquals("ACTIVO", resultado.get().getEstado());
     }
+
+    @Test
+    @DisplayName("EliminarCentro con ID existente debe retornar true")
+    void eliminarCentro_existente_retornaTrue() {
+        when(centroRepository.existsById(1L)).thenReturn(true);
+
+        boolean resultado = logisticaService.eliminarCentro(1L);
+
+        assertTrue(resultado);
+        verify(centroRepository).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("EliminarCentro con ID inexistente debe retornar false")
+    void eliminarCentro_inexistente_retornaFalse() {
+        when(centroRepository.existsById(999L)).thenReturn(false);
+
+        boolean resultado = logisticaService.eliminarCentro(999L);
+
+        assertFalse(resultado);
+        verify(centroRepository, never()).deleteById(any());
+    }
+
+    @Test
+    @DisplayName("EliminarEnvio con ID existente debe retornar true")
+    void eliminarEnvio_existente_retornaTrue() {
+        when(envioRepository.existsById(1L)).thenReturn(true);
+
+        boolean resultado = logisticaService.eliminarEnvio(1L);
+
+        assertTrue(resultado);
+        verify(envioRepository).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("EliminarEnvio con ID inexistente debe retornar false")
+    void eliminarEnvio_inexistente_retornaFalse() {
+        when(envioRepository.existsById(999L)).thenReturn(false);
+
+        boolean resultado = logisticaService.eliminarEnvio(999L);
+
+        assertFalse(resultado);
+        verify(envioRepository, never()).deleteById(any());
+    }
 }

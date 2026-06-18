@@ -2,6 +2,8 @@ package donaton.msdonaciones.controller;
 
 import donaton.msdonaciones.model.Donacion;
 import donaton.msdonaciones.service.DonacionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/donaciones")
 @CrossOrigin(origins = "*")
+@Tag(name = "Donaciones", description = "Gestión del ciclo de vida de donaciones (ROPA, ALIMENTO, MEDICO, HIGIENE)")
 public class DonacionController {
 
     private final DonacionService donacionService;
@@ -25,11 +28,13 @@ public class DonacionController {
         this.donacionService = donacionService;
     }
 
+    @Operation(summary = "Listar todas las donaciones registradas")
     @GetMapping
     public List<Donacion> listarTodas() {
         return donacionService.obtenerTodas();
     }
 
+    @Operation(summary = "Obtener una donación por su ID")
     @GetMapping("/{id}")
     public ResponseEntity<Donacion> obtenerPorId(@PathVariable Long id) {
         return donacionService.obtenerPorId(id)
@@ -37,11 +42,13 @@ public class DonacionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Listar donaciones filtradas por estado (RECIBIDA, EN_PROCESO, DISTRIBUIDA)")
     @GetMapping("/estado/{estado}")
     public List<Donacion> listarPorEstado(@PathVariable String estado) {
         return donacionService.obtenerPorEstado(estado);
     }
 
+    @Operation(summary = "Listar donaciones asociadas a un centro de acopio")
     @GetMapping("/centro/{centroId}")
     public List<Donacion> listarPorCentro(@PathVariable Long centroId) {
         return donacionService.obtenerPorCentro(centroId);
@@ -58,6 +65,7 @@ public class DonacionController {
      *   "descripcion": "string"
      * }
      */
+    @Operation(summary = "Registrar una nueva donación (activa el Factory Method según el tipo)")
     @PostMapping
     public ResponseEntity<?> crearDonacion(@RequestBody Map<String, Object> body) {
         try {
@@ -74,6 +82,7 @@ public class DonacionController {
         }
     }
 
+    @Operation(summary = "Actualizar el estado de una donación existente")
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> actualizarEstado(@PathVariable Long id,
                                                @RequestParam String estado) {
@@ -84,6 +93,7 @@ public class DonacionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Eliminar una donación por su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, String>> eliminar(@PathVariable Long id) {
         if (donacionService.eliminar(id)) {

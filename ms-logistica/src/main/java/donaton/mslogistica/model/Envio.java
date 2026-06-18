@@ -1,19 +1,49 @@
 package donaton.mslogistica.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+/**
+ * Entidad JPA que representa un envío de logística en la plataforma Donaton.
+ * Persistida en base de datos H2 mediante Spring Data JPA (Hibernate).
+ */
+@Entity
+@Table(name = "envios")
 public class Envio {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "centro_origen_id", nullable = false)
     private Long centroOrigenId;
+
+    @Column(name = "necesidad_id")
     private Long necesidadId;
+
+    @Column(name = "destino_descripcion", nullable = false)
     private String destinoDescripcion;
+
+    @Column(name = "responsable_transporte")
     private String responsableTransporte;
+
+    @Column(name = "patente_vehiculo")
     private String patenteVehiculo;
+
+    @Column(nullable = false, length = 20)
     private String estado;              // PLANIFICADO, EN_CAMINO, ENTREGADO, CANCELADO
+
+    @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
+
+    @Column(name = "fecha_despacho")
     private LocalDateTime fechaDespacho;
+
+    @Column(name = "fecha_entrega")
     private LocalDateTime fechaEntrega;
+
+    @Column(length = 500)
     private String observaciones;
 
     public Envio() {}

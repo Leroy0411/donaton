@@ -56,6 +56,8 @@ mvn spring-boot:run
 ```
 
 BFF disponible en: `http://localhost:8080`
+Documentación interactiva (Swagger UI): `http://localhost:8080/swagger-ui.html`
+Especificación OpenAPI (JSON): `http://localhost:8080/api-docs`
 
 ---
 
@@ -112,4 +114,5 @@ mvn test
 ```
 
 Clases cubiertas:
-- `BffServiceTest` — 5 pruebas (agregación correcta, manejo de fallos de microservicios)
+- `BffServiceTest` — agregación correcta, manejo de fallos parciales de microservicios.
+- `BffControllerTest` — contrato HTTP de `/bff/dashboard` y `/bff/health` con `@WebMvcTest`.

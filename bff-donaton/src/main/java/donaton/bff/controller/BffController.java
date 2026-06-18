@@ -2,6 +2,8 @@ package donaton.bff.controller;
 
 import donaton.bff.dto.DashboardResumenDTO;
 import donaton.bff.service.BffService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/bff")
 @CrossOrigin(origins = "*")
+@Tag(name = "BFF", description = "Backend For Frontend: agrega datos de MS-Donaciones y MS-Logística")
 public class BffController {
 
     private final BffService bffService;
@@ -27,11 +30,13 @@ public class BffController {
      *
      * GET /bff/dashboard
      */
+    @Operation(summary = "Obtener resumen agregado del dashboard (donaciones + centros + envíos)")
     @GetMapping("/dashboard")
     public ResponseEntity<DashboardResumenDTO> getDashboard() {
         return ResponseEntity.ok(bffService.obtenerResumenDashboard());
     }
 
+    @Operation(summary = "Verificar el estado del BFF")
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("BFF-Donaton OK");

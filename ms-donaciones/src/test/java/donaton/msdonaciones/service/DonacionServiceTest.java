@@ -184,25 +184,27 @@ class DonacionServiceTest {
     @DisplayName("Eliminar con ID existente debe retornar true")
     void eliminar_existente_retornaTrue() {
         // Arrange
-        when(donacionRepository.deleteById(1L)).thenReturn(true);
+        when(donacionRepository.existsById(1L)).thenReturn(true);
 
         // Act
         boolean resultado = donacionService.eliminar(1L);
 
         // Assert
         assertTrue(resultado);
+        verify(donacionRepository).deleteById(1L);
     }
 
     @Test
     @DisplayName("Eliminar con ID inexistente debe retornar false")
     void eliminar_inexistente_retornaFalse() {
         // Arrange
-        when(donacionRepository.deleteById(999L)).thenReturn(false);
+        when(donacionRepository.existsById(999L)).thenReturn(false);
 
         // Act
         boolean resultado = donacionService.eliminar(999L);
 
         // Assert
         assertFalse(resultado);
+        verify(donacionRepository, never()).deleteById(any());
     }
 }

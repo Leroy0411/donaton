@@ -4,17 +4,18 @@
 
 Microservicio encargado de la gestión de centros de acopio, inventario disponible y planificación/seguimiento de envíos en la plataforma **Donaton**.
 
-**Puerto:** `8082`  
+**Puerto:** `8082`
 **Patrones implementados:** Repository Pattern · Observer
+**Persistencia:** Spring Data JPA + base de datos H2 (archivo embebido)
 
 ---
 
 ## Patrones de Diseño
 
 ### Repository Pattern
-- **Interfaces:** `CentroAcopioRepository`, `EnvioRepository`
-- **Implementaciones:** `CentroAcopioRepositoryImpl`, `EnvioRepositoryImpl`
-- **Beneficio:** Desacopla la lógica de negocio de la persistencia; intercambiable con JPA sin modificar los servicios.
+- **Interfaces:** `CentroAcopioRepository`, `EnvioRepository`, ambas extienden `JpaRepository`
+- **Persistencia real:** Hibernate gestiona automáticamente el CRUD sobre la base H2.
+- **Beneficio:** Desacopla la lógica de negocio de la persistencia; cambiar de H2 a otro motor relacional en producción solo requiere ajustar `application.properties`.
 
 ### Observer (GoF)
 - **Interfaz sujeto:** `EnvioObserver`
@@ -22,6 +23,16 @@ Microservicio encargado de la gestión de centros de acopio, inventario disponib
   - `AuditoriaEnvioObserver` — registra en bitácora todos los cambios de estado
   - `NotificacionEnvioObserver` — dispara alertas SMS/email según el nuevo estado
 - **Beneficio:** Cada cambio de estado en un envío notifica automáticamente a todos los observadores registrados. Agregar nuevas reacciones (métricas, webhooks) solo requiere implementar `EnvioObserver` y registrarlo como bean de Spring.
+
+---
+
+## Persistencia de Datos (JPA)
+
+- **Entidades:** `CentroAcopio` (tabla `centros_acopio`) y `Envio` (tabla `envios`), ambas anotadas con `@Entity`.
+- **Motor:** H2 en modo archivo (`./data/logistica-db.mv.db`) — los datos persisten entre reinicios.
+- **DDL automático:** `spring.jpa.hibernate.ddl-auto=update`.
+- **Consola de administración:** `http://localhost:8082/h2-console`, URL `jdbc:h2:file:./data/logistica-db` (usuario `sa`, sin contraseña).
+- **Pruebas de integración:** `LogisticaRepositoryTest` usa `@DataJpaTest` con H2 en memoria (perfil de test).
 
 ---
 
@@ -44,6 +55,8 @@ mvn spring-boot:run
 ```
 
 El servicio estará disponible en: `http://localhost:8082`
+Documentación interactiva (Swagger UI): `http://localhost:8082/swagger-ui.html`
+Especificación OpenAPI (JSON): `http://localhost:8082/api-docs`
 
 ---
 
@@ -82,7 +95,10 @@ mvn test
 ```
 
 Clases cubiertas:
-- `LogisticaServiceTest` — 7 pruebas (Observer verificado con mocks, saturación de centros)
+- `LogisticaServiceTest` — Observer verificado con mocks, saturación de centros, eliminación de centros/envíos.
+- `LogisticaControllerTest` — contrato HTTP de centros y envíos con `@WebMvcTest`.
+- `EnvioObserversTest` — comportamiento de `AuditoriaEnvioObserver` y `NotificacionEnvioObserver`.
+- `LogisticaRepositoryTest` — pruebas de integración JPA con `@DataJpaTest` sobre H2 en memoria.
 
 ---
 
@@ -91,11 +107,14 @@ Clases cubiertas:
 ```
 ms-logistica/
 ├── src/main/java/donaton/mslogistica/
-│   ├── model/      → CentroAcopio.java, Envio.java
-│   ├── repository/ → CentroAcopioRepository + Impl, EnvioRepository + Impl
+│   ├── model/      → CentroAcopio.java, Envio.java (entidades JPA)
+│   ├── repository/ → CentroAcopioRepository, EnvioRepository (Spring Data JPA)
 │   ├── observer/   → EnvioObserver (interfaz)
 │   │                 AuditoriaEnvioObserver, NotificacionEnvioObserver
 │   ├── service/    → LogisticaService (gestiona el patrón Observer)
-│   └── controller/ → LogisticaController
-└── src/test/java/  → LogisticaServiceTest
+│   └── controller/ → LogisticaController (con anotaciones OpenAPI)
+├── src/main/resources/ → application.properties (config H2 + JPA + Swagger)
+├── src/test/java/  → LogisticaServiceTest, LogisticaControllerTest,
+│                      EnvioObserversTest, LogisticaRepositoryTest
+└── src/test/resources/ → application.properties (perfil de test, H2 en memoria)
 ```

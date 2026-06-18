@@ -1,15 +1,45 @@
 package donaton.mslogistica.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+
+/**
+ * Entidad JPA que representa un centro de acopio en la plataforma Donaton.
+ * Persistida en base de datos H2 mediante Spring Data JPA (Hibernate).
+ */
+@Entity
+@Table(name = "centros_acopio")
 public class CentroAcopio {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false)
     private String direccion;
+
+    @Column(nullable = false)
     private String comuna;
+
+    @Min(1)
+    @Column(name = "capacidad_maxima", nullable = false)
     private Integer capacidadMaxima;
+
+    @Column(name = "ocupacion_actual", nullable = false)
     private Integer ocupacionActual;
+
+    @Column(nullable = false, length = 20)
     private String estado;              // ACTIVO, INACTIVO, SATURADO
+
+    @Column(name = "responsable_nombre")
     private String responsableNombre;
+
+    @Column(name = "responsable_contacto")
     private String responsableContacto;
 
     public CentroAcopio() {}
@@ -27,10 +57,12 @@ public class CentroAcopio {
         this.responsableContacto = responsableContacto;
     }
 
+    @Transient
     public boolean tieneCapacidadDisponible() {
         return ocupacionActual < capacidadMaxima;
     }
 
+    @Transient
     public int getCapacidadDisponible() {
         return capacidadMaxima - ocupacionActual;
     }

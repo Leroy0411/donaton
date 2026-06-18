@@ -1,18 +1,16 @@
 package donaton.mslogistica.repository;
 
 import donaton.mslogistica.model.CentroAcopio;
-import donaton.mslogistica.model.Envio;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * PATRÓN: Repository Pattern — Centros de Acopio
+ * Extiende Spring Data JPA, proveyendo persistencia real sobre H2.
  */
-public interface CentroAcopioRepository {
-    List<CentroAcopio> findAll();
-    Optional<CentroAcopio> findById(Long id);
+@Repository
+public interface CentroAcopioRepository extends JpaRepository<CentroAcopio, Long> {
     List<CentroAcopio> findByEstado(String estado);
-    CentroAcopio save(CentroAcopio centro);
-    boolean deleteById(Long id);
 }

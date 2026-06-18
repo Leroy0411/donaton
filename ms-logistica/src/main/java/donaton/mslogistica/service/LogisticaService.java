@@ -42,6 +42,10 @@ public class LogisticaService {
         return centroRepository.findByEstado("ACTIVO");
     }
 
+    // Nota: "ACTIVO" ya está en mayúsculas en este servicio, por lo que
+    // findByEstado(String) exacto de Spring Data JPA es consistente
+    // siempre que las entidades se guarden siempre en mayúsculas (ver agregarCentro/actualizarOcupacion).
+
     public List<CentroAcopio> obtenerCentrosConCapacidad() {
         return centroRepository.findAll().stream()
                 .filter(c -> "ACTIVO".equalsIgnoreCase(c.getEstado()) && c.tieneCapacidadDisponible())
@@ -67,7 +71,11 @@ public class LogisticaService {
     }
 
     public boolean eliminarCentro(Long id) {
-        return centroRepository.deleteById(id);
+        if (!centroRepository.existsById(id)) {
+            return false;
+        }
+        centroRepository.deleteById(id);
+        return true;
     }
 
     // ── Envíos con patrón Observer ───────────────────────────────────────
@@ -77,7 +85,7 @@ public class LogisticaService {
     }
 
     public List<Envio> obtenerPorEstado(String estado) {
-        return envioRepository.findByEstado(estado);
+        return envioRepository.findByEstado(estado.toUpperCase());
     }
 
     public Envio crearEnvio(Envio envio) {
@@ -118,7 +126,11 @@ public class LogisticaService {
     }
 
     public boolean eliminarEnvio(Long id) {
-        return envioRepository.deleteById(id);
+        if (!envioRepository.existsById(id)) {
+            return false;
+        }
+        envioRepository.deleteById(id);
+        return true;
     }
 
     /**
